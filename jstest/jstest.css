@@ -1,0 +1,69 @@
+.jstest-container {
+	border:solid 4px black;
+	top:20px;
+	right:20px;
+	width:500px;
+	background-color:#FFF;
+	z-index:1000;
+}
+
+.jstest-content {
+	height:400px;
+	overflow:auto;
+}
+
+.jstest-header {
+	border-bottom: solid 1px black;
+	padding:2px;
+	font-weight:bold;
+	background-color:black;
+	color:white;
+	text-align:center;
+}
+
+.jstest-button {
+	width:16px;
+	height:16px;
+	float:right;
+}
+.jstest-btn-all {
+	background-image: url(jstest-all.png);
+}
+.jstest-btn-fail {
+	background-image: url(jstest-fail.png);
+}
+.jstest-btn-pass {
+	background-image: url(jstest-pass.png);
+}
+
+.jstest-footer {
+	border-top: solid 1px black;
+	padding:2px;
+	font-weight:bold;
+	background-color:black;
+	color:white;
+	text-align:center;
+}
+
+.jstest-name {
+	font-weight:bold;	
+}
+.jstest-test {
+	border: solid 1px black;
+	margin: 6px;
+	padding: 2px;
+	color: #000;
+}
+
+
+
+
+.jstest-passed {
+	background-color:#A5FF8A;
+}
+
+.jstest-failed {
+	background-color:#FF7575;
+}
+
+
