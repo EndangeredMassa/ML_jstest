@@ -26,15 +26,6 @@
 	height:16px;
 	float:right;
 }
-.jstest-btn-all {
-	background-image: url(jstest-all.png);
-}
-.jstest-btn-fail {
-	background-image: url(jstest-fail.png);
-}
-.jstest-btn-pass {
-	background-image: url(jstest-pass.png);
-}
 
 .jstest-footer {
 	border-top: solid 1px black;
@@ -55,9 +46,6 @@
 	color: #000;
 }
 
-
-
-
 .jstest-passed {
 	background-color:#A5FF8A;
 }
@@ -65,5 +53,3 @@
 .jstest-failed {
 	background-color:#FF7575;
 }
-
-
