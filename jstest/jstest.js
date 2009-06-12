@@ -3,19 +3,28 @@
  * Sean Massa
  * www.massalabs.com/blog
  */ 
+ 
+ "use strict";
+ 
 (function() {
 
 //Implement a blank console if one
 // doesn't already exist.
 if (typeof console === 'undefined') {
 	var empty = function(){};
-	console = {
+	window.console = {
 		log: empty
 		,debug: empty
 		,info: empty
 		,warn: empty
 	};
 }
+
+//Accepts an exception constructor function and 
+// stores it for later comparison
+var ExpectedException = function(exConstructor){
+	this.exConstructor = exConstructor;
+};
 
 //Creates the DOM container for our 
 // test output
@@ -62,9 +71,9 @@ function updateStats(passed, failed) {
 	var percent = (passed / (total > 0 ? total : 1) * 100) + '';
 	
 	//trim long repeating decimals
-	if(percent.indexOf(".") > 0) 
+	if(percent.indexOf(".") > 0) {
 		percent = percent.substring(0,5);
-	
+	}
 	var msg = 'Passed: ' + passed + ' / ' + total;
 	msg    += ' = ' + percent + '%';
 	footer.innerHTML = msg;
@@ -79,8 +88,9 @@ function Test (method, name, attributes) {
 	
 	this.expectsException = function(expected){
 		for(var ex in this.expectedExceptions) {
-			if (expected === this.expectedExceptions[ex])
+			if (expected === this.expectedExceptions[ex]) {
 				return true;
+			}
 		}
 		return false;
 	};
@@ -90,8 +100,8 @@ function Test (method, name, attributes) {
 	};
 	
 	this.expectException = function(ex){
-		if (ex === null) return;
-		if (typeof ex !== "function") return;
+		if (ex === null) { return; }
+		if (typeof ex !== "function") { return; }
 		
 		this.expectedExceptions.push(ex);
 	};
@@ -113,6 +123,17 @@ function Test (method, name, attributes) {
 //Normalizes our tests into our Test type
 function normalizeTests(tests){
 	var normalized = [];
+	
+	var sorter = function(a,b) {
+		if(typeof a !== 'number') {
+			return 1;
+		}
+		if(typeof b !== 'number') {
+			return -1;
+		}
+		return (a - b);
+	};
+	
 	for(var test in tests) {
 		var name = test;
 		if(tests[test].constructor === Function) {
@@ -125,13 +146,7 @@ function normalizeTests(tests){
 			
 			//Sort attributes by number, then by 
 			// non-number types
-			attributes.sort(function(a,b) {
-				if(typeof a !== 'number')
-					return 1;
-				if(typeof b !== 'number')
-					return -1;
-				return (a - b);
-			});
+			attributes.sort(sorter);
 			normalized.push(
 				new Test(method,name,attributes)
 			);
@@ -174,20 +189,24 @@ function Suite(tests) {
 					//here will skip the other attributes
 					break;
 				} else if (attr === jstest.TestSetup) {
-					if (this.testSetup !== empty)
+					if (this.testSetup !== empty) {
 						throw new Error("Cannot use more than one TestSetup attribute.");
+					}
 					this.testSetup = nTest.method;
 				} else if (attr === jstest.TestTeardown) {
-					if (this.testTeardown !== empty)
+					if (this.testTeardown !== empty) {
 						throw new Error("Cannot use more than one TestTeardown attribute.");
+					}
 					this.testTeardown = nTest.method;
 				} else if (attr === jstest.SuiteSetup) {
-					if (this.suiteSetup !== empty)
+					if (this.suiteSetup !== empty) {
 						throw new Error("Cannot use more than one SuiteSetup attribute.");
+					}
 					this.suiteSetup = nTest.method;
 				} else if (attr === jstest.SuiteTeardown) {
-					if (this.suiteTeardown !== empty)
+					if (this.suiteTeardown !== empty) {
 						throw new Error("Cannot use more than one SuiteTeardown attribute.");
+					}
 					this.suiteTeardown = nTest.method;
 				} else if (attr.constructor === ExpectedException) {
 					//TODO: Clean this up
@@ -216,16 +235,16 @@ function runSuite(suite) {
 		var msg = '';
 		addTestResult(name, msg, true);
 		passed++;
-	};
+	}
 	
 	function fail(name, exMessage) {
 		addTestResult(name, exMessage, false);
 		failed++;
-	};
+	}
 	
 	suite.suiteSetup();
 	
-	for(test in suite.tests) {
+	for(var test in suite.tests) {
 		var sTest = suite.tests[test];
 		
 		suite.testSetup();
@@ -261,12 +280,6 @@ var jstest = window.jstest = function(tests) {
 	jstest.container = createContainer();
 	var suite = new Suite(tests);
 	runSuite(suite);
-}
-
-//Accepts an exception constructor function and 
-// stores it for later comparison
-var ExpectedException = function(exConstructor){
-	this.exConstructor = exConstructor;
 };
 
 //Test Atributes
@@ -279,7 +292,7 @@ jstest.ExpectsException = function(ex){ return new ExpectedException(ex); };
 
 //Returns a stack trace
 jstest.Trace = function() { 
-	try { throw Error() } catch(ex) { return ex.stack } 
+	try { throw new Error(); } catch(ex) { return ex.stack; } 
 };
 
 //Assert Exception type constructor
@@ -362,20 +375,24 @@ var assert = window.assert = {
 		}
 	},
 	notNull: function(value) {
-		if (value === null)
+		if (value === null) {
 			throw new AssertFailure("Unexpected null Value.");
+		}
 	},
 	isNull: function(value) {
-		if (value !== null) 
+		if (value !== null) {
 			throw new AssertFailure("Expected null Value, but got " + value + ".");
+		}
 	},
 	isTrue: function(flag) {
-		if (flag !== true)
+		if (flag !== true) {
 			throw new AssertFailure("Expected true.");
+		}
 	},
 	isFalse: function(flag) {
-		if (flag !== false)
+		if (flag !== false) {
 			throw new AssertFailure("Expected false.");
+		}
 	}
 };
 
